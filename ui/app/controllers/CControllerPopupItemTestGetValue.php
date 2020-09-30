@@ -26,11 +26,11 @@ class CControllerPopupItemTestGetValue extends CControllerPopupItemTest {
 
 	protected function checkInput() {
 		$fields = [
-			'authtype'				=> 'in '.implode(',', [HTTPTEST_AUTH_NONE, HTTPTEST_AUTH_BASIC, HTTPTEST_AUTH_NTLM, HTTPTEST_AUTH_KERBEROS, ITEM_AUTHTYPE_PASSWORD, ITEM_AUTHTYPE_PUBLICKEY]),
+			'authtype'				=> 'in '.implode(',', [HTTPTEST_AUTH_NONE, HTTPTEST_AUTH_BASIC, HTTPTEST_AUTH_NTLM, HTTPTEST_AUTH_KERBEROS, HTTPTEST_AUTH_DIGEST, ITEM_AUTHTYPE_PASSWORD, ITEM_AUTHTYPE_PUBLICKEY]),
 			'headers'				=> 'array',
 			'hostid'				=> 'db hosts.hostid',
 			'proxy_hostid'			=> 'id',
-			'http_authtype'			=> 'in '.implode(',', [HTTPTEST_AUTH_NONE, HTTPTEST_AUTH_BASIC, HTTPTEST_AUTH_NTLM, HTTPTEST_AUTH_KERBEROS, ITEM_AUTHTYPE_PASSWORD, ITEM_AUTHTYPE_PUBLICKEY]),
+			'http_authtype'			=> 'in '.implode(',', [HTTPTEST_AUTH_NONE, HTTPTEST_AUTH_BASIC, HTTPTEST_AUTH_NTLM, HTTPTEST_AUTH_KERBEROS, HTTPTEST_AUTH_DIGEST, ITEM_AUTHTYPE_PASSWORD, ITEM_AUTHTYPE_PUBLICKEY]),
 			'http_password'			=> 'string',
 			'http_proxy'			=> 'string',
 			'http_username'			=> 'string',
@@ -146,7 +146,7 @@ class CControllerPopupItemTestGetValue extends CControllerPopupItemTest {
 		// Get post data for particular item type.
 		$data = $this->getItemTestProperties($this->getInputAll());
 
-		// Apply efective macros values to properties.
+		// Apply effective macros values to properties.
 		$data = $this->resolveItemPropertyMacros($data);
 
 		if ($this->item_type != ITEM_TYPE_AGGREGATE && $this->item_type != ITEM_TYPE_CALCULATED) {
@@ -183,9 +183,10 @@ class CControllerPopupItemTestGetValue extends CControllerPopupItemTest {
 
 		// Send test to be executed on Zabbix server.
 		$server = new CZabbixServer($ZBX_SERVER, $ZBX_SERVER_PORT,
+			timeUnitToSeconds(CSettingsHelper::get(CSettingsHelper::CONNECT_TIMEOUT)),
 			timeUnitToSeconds(CSettingsHelper::get(CSettingsHelper::ITEM_TEST_TIMEOUT)), ZBX_SOCKET_BYTES_LIMIT
 		);
-		$result = $server->testItem($data, CWebUser::getSessionCookie());
+		$result = $server->testItem($data, CSessionHelper::getId());
 
 		// Handle the response.
 		if ($result === false) {

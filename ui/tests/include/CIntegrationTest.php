@@ -569,12 +569,8 @@ class CIntegrationTest extends CAPITest {
 			throw new Exception('There is no client available for Zabbix Agent.');
 		}
 
-		$settings = $this->call('settings.get', [
-			'output' => ['socket_timeout']
-		]);
-
-		return new CZabbixClient('localhost', self::getConfigurationValue($component, 'ListenPort', 10051),
-			timeUnitToSeconds($settings['result'][0]['socket_timeout']), ZBX_SOCKET_BYTES_LIMIT
+		return new CZabbixClient('localhost', self::getConfigurationValue($component, 'ListenPort', 10051), 3, 3,
+			ZBX_SOCKET_BYTES_LIMIT
 		);
 	}
 
@@ -744,14 +740,15 @@ class CIntegrationTest extends CAPITest {
 	/**
 	 * Request data from API until data is present (@see call).
 	 *
-	 * @param string  $method        API method to be called
-	 * @param mixed   $params        API call params
-	 * @param integer $iterations    iteration count
-	 * @param integer $delay         iteration delay
+	 * @param string   $method        API method to be called
+	 * @param mixed    $params        API call params
+	 * @param integer  $iterations    iteration count
+	 * @param integer  $delay         iteration delay
+	 * @param callable $callback      Callback function to test if API response is valid.
 	 *
 	 * @return array
 	 */
-	public function callUntilDataIsPresent($method, $params, $iterations = null, $delay = null) {
+	public function callUntilDataIsPresent($method, $params, $iterations = null, $delay = null, $callback = null) {
 		if ($iterations === null) {
 			$iterations = self::WAIT_ITERATIONS;
 		}
@@ -765,7 +762,8 @@ class CIntegrationTest extends CAPITest {
 			try {
 				$response = $this->call($method, $params);
 
-				if (is_array($response['result']) && count($response['result']) > 0) {
+				if (is_array($response['result']) && count($response['result']) > 0
+						&& ($callback === null || call_user_func($callback, $response))) {
 					return $response;
 				}
 			} catch (Exception $e) {

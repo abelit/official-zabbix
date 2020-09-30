@@ -24,11 +24,13 @@ require_once dirname(__FILE__).'/CElement.php';
 require_once dirname(__FILE__).'/CElementCollection.php';
 require_once dirname(__FILE__).'/elements/CNullElement.php';
 require_once dirname(__FILE__).'/elements/CFormElement.php';
+require_once dirname(__FILE__).'/elements/CCheckboxFormElement.php';
 require_once dirname(__FILE__).'/elements/CTableElement.php';
 require_once dirname(__FILE__).'/elements/CTableRowElement.php';
 require_once dirname(__FILE__).'/elements/CWidgetElement.php';
 require_once dirname(__FILE__).'/elements/CDashboardElement.php';
 require_once dirname(__FILE__).'/elements/CDropdownElement.php';
+require_once dirname(__FILE__).'/elements/CZDropdownElement.php';
 require_once dirname(__FILE__).'/elements/CCheckboxElement.php';
 require_once dirname(__FILE__).'/elements/COverlayDialogElement.php';
 require_once dirname(__FILE__).'/elements/CMessageElement.php';
@@ -41,6 +43,7 @@ require_once dirname(__FILE__).'/elements/CColorPickerElement.php';
 require_once dirname(__FILE__).'/elements/CCompositeInputElement.php';
 require_once dirname(__FILE__).'/elements/CPopupMenuElement.php';
 require_once dirname(__FILE__).'/elements/CPopupButtonElement.php';
+require_once dirname(__FILE__).'/elements/CInputGroupElement.php';
 
 require_once dirname(__FILE__).'/IWaitable.php';
 require_once dirname(__FILE__).'/WaitableTrait.php';
@@ -273,7 +276,7 @@ class CElementQuery implements IWaitable {
 	public function query($type, $locator = null) {
 		$prefix = CXPathHelper::fromWebDriverBy($this->by);
 		$suffix = CXPathHelper::fromSelector($type, $locator);
-		$this->by = static::getSelector('xpath', './'.$prefix.'/'.$suffix);
+		$this->by = static::getSelector('xpath', './/'.$prefix.'//'.$suffix);
 
 		return $this;
 	}
@@ -491,6 +494,15 @@ class CElementQuery implements IWaitable {
 	}
 
 	/**
+	 * Check that the corresponding element exists.
+	 *
+	 * @return boolean
+	 */
+	public function exists() {
+		return $this->one(false)->isValid();
+	}
+
+	/**
 	 * Get input element from container.
 	 *
 	 * @param CElement     $target    container element
@@ -507,6 +519,7 @@ class CElementQuery implements IWaitable {
 				'/textarea[@name]'
 			],
 			'CDropdownElement'			=> '/select[@name]',
+			'CZDropdownElement'			=> '/z-select[@name]',
 			'CCheckboxElement'			=> '/input[@name][@type="checkbox" or @type="radio"]',
 			'CMultiselectElement'		=> [
 				'/div[contains(@class, "multiselect-control")]',
@@ -530,7 +543,8 @@ class CElementQuery implements IWaitable {
 				'/div[contains(@class, "calendar-control")]'
 			],
 			'CColorPickerElement'		=> '/div[contains(@class, "input-color-picker")]',
-			'CMultilineElement'			=> '/div[contains(@class, "multilineinput-control")]'
+			'CMultilineElement'			=> '/div[contains(@class, "multilineinput-control")]',
+			'CInputGroupElement'		=> '/div[contains(@class, "input-group")]'
 		];
 
 		if ($class !== null) {

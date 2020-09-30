@@ -222,6 +222,75 @@ static int	DBpatch_5010023(void)
 	return DBadd_field("config", &field);
 }
 
+static int	DBpatch_5010024(void)
+{
+	const ZBX_FIELD	field = {"session_key", "", NULL, NULL, 32, ZBX_TYPE_CHAR, ZBX_NOTNULL, 0};
+
+	return DBadd_field("config", &field);
+}
+
+static int	DBpatch_5010025(void)
+{
+	const ZBX_FIELD field = {"value", "", NULL, NULL, 2048, ZBX_TYPE_CHAR, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("hostmacro", &field, NULL);
+}
+
+static int	DBpatch_5010026(void)
+{
+	const ZBX_FIELD field = {"value", "", NULL, NULL, 2048, ZBX_TYPE_CHAR, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("globalmacro", &field, NULL);
+}
+
+static int	DBpatch_5010027(void)
+{
+	const ZBX_FIELD	old_field = {"data", "", NULL, NULL, 0, ZBX_TYPE_SHORTTEXT, ZBX_NOTNULL, 0};
+	const ZBX_FIELD	field = {"data", "", NULL, NULL, 0, ZBX_TYPE_TEXT, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("task_data", &field, &old_field);
+}
+
+static int	DBpatch_5010028(void)
+{
+	const ZBX_FIELD	old_field = {"info", "", NULL, NULL, 0, ZBX_TYPE_SHORTTEXT, ZBX_NOTNULL, 0};
+	const ZBX_FIELD	field = {"info", "", NULL, NULL, 0, ZBX_TYPE_TEXT, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("task_result", &field, &old_field);
+}
+
+static int	DBpatch_5010029(void)
+{
+	const ZBX_FIELD	old_field = {"params", "", NULL, NULL, 0, ZBX_TYPE_SHORTTEXT, ZBX_NOTNULL, 0};
+	const ZBX_FIELD	field = {"params", "", NULL, NULL, 0, ZBX_TYPE_TEXT, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("items", &field, &old_field);
+}
+
+static int	DBpatch_5010030(void)
+{
+	const ZBX_FIELD	old_field = {"description", "", NULL, NULL, 0, ZBX_TYPE_SHORTTEXT, ZBX_NOTNULL, 0};
+	const ZBX_FIELD	field = {"description", "", NULL, NULL, 0, ZBX_TYPE_TEXT, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("items", &field, &old_field);
+}
+
+static int	DBpatch_5010031(void)
+{
+	const ZBX_FIELD	old_field = {"posts", "", NULL, NULL, 0, ZBX_TYPE_SHORTTEXT, ZBX_NOTNULL, 0};
+	const ZBX_FIELD	field = {"posts", "", NULL, NULL, 0, ZBX_TYPE_TEXT, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("items", &field, &old_field);
+}
+
+static int	DBpatch_5010032(void)
+{
+	const ZBX_FIELD	old_field = {"headers", "", NULL, NULL, 0, ZBX_TYPE_SHORTTEXT, ZBX_NOTNULL, 0};
+	const ZBX_FIELD	field = {"headers", "", NULL, NULL, 0, ZBX_TYPE_TEXT, ZBX_NOTNULL, 0};
+
+	return DBmodify_field_type("items", &field, &old_field);
+}
+
 #endif
 
 DBPATCH_START(5010)
@@ -252,5 +321,14 @@ DBPATCH_ADD(5010020, 0, 1)
 DBPATCH_ADD(5010021, 0, 1)
 DBPATCH_ADD(5010022, 0, 1)
 DBPATCH_ADD(5010023, 0, 1)
+DBPATCH_ADD(5010024, 0, 1)
+DBPATCH_ADD(5010025, 0, 1)
+DBPATCH_ADD(5010026, 0, 1)
+DBPATCH_ADD(5010027, 0, 1)
+DBPATCH_ADD(5010028, 0, 1)
+DBPATCH_ADD(5010029, 0, 1)
+DBPATCH_ADD(5010030, 0, 1)
+DBPATCH_ADD(5010031, 0, 1)
+DBPATCH_ADD(5010032, 0, 1)
 
 DBPATCH_END()

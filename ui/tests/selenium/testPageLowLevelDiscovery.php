@@ -116,7 +116,7 @@ class testPageLowLevelDiscovery extends CWebTest {
 		$form->fill(['Name' => 'Discovery rule 3']);
 		$form->submit();
 
-		// Check that filtered count mathces expected.
+		// Check that filtered count matches expected.
 		$this->assertEquals(1, $table->getRows()->count());
 		$this->assertRowCount(1);
 
@@ -274,9 +274,9 @@ class testPageLowLevelDiscovery extends CWebTest {
 			[
 				[
 					'filter' => [
-						'Host groups' => 'Templates/Virtualization'
+						'Host groups' => 'Templates/Server hardware'
 					],
-					'rows' => 8
+					'rows' => 39
 				]
 			],
 			[
@@ -402,8 +402,7 @@ class testPageLowLevelDiscovery extends CWebTest {
 						'State' => 'Normal'
 					],
 					'expected' => [
-						'Template Module Linux block devices by Zabbix agent: Get /proc/diskstats:'
-						. ' Block devices discovery',
+						'Template Module Linux block devices by Zabbix agent: Block devices discovery',
 						'Template Module Linux filesystems by Zabbix agent: Mounted filesystem discovery',
 						'Template Module Linux network interfaces by Zabbix agent: Network interface discovery'
 					]
@@ -416,8 +415,7 @@ class testPageLowLevelDiscovery extends CWebTest {
 						'State' => 'Normal'
 					],
 					'expected' => [
-						'Template Module Linux block devices by Zabbix agent: Get /proc/diskstats:'
-						. ' Block devices discovery'
+						'Template Module Linux block devices by Zabbix agent: Block devices discovery'
 					]
 				]
 			],
@@ -427,18 +425,18 @@ class testPageLowLevelDiscovery extends CWebTest {
 						'Host groups' => 'Templates/Operating systems',
 						'Type' => 'Dependent item'
 					],
-					'rows' => 10
+					'rows' => 6
 				]
 			],
 			[
 				[
 					'filter' => [
 						'Type' => 'Database monitor',
-						'Update interval' => '1h'
+						'Update interval' => '1h',
+						'Name'=> 'Databases'
 					],
 					'expected' => [
-						'Databases discovery',
-						'Replication discovery'
+						'Databases discovery'
 					]
 				]
 			],
